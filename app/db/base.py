@@ -16,6 +16,10 @@ class BaseModel(Base):
     
     __abstract__ = True
     
+    id: Mapped[int] = mapped_column(
+        primary_key=True
+    )
+    
     is_active: Mapped[bool] = mapped_column(
         default=True
     )

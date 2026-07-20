@@ -23,6 +23,12 @@ if config.config_file_name is not None:
 from db.base import Base
 
 from models.users import User
+from models.projects import (
+    Project,
+    Task,
+    Tag,
+    Comment,
+)
 target_metadata = Base.metadata 
 
 # other values from the config, defined by the needs of env.py,
