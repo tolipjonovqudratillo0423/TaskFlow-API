@@ -8,7 +8,7 @@ from sqlalchemy import (
     String
 )
 
-from db.base import BaseModel
+from app.db.base import BaseModel
 if TYPE_CHECKING:
     from models.projects import Project, Task, Comment
 

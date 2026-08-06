@@ -2,7 +2,7 @@ from typing import Annotated
 from sqlalchemy.orm import sessionmaker, Session
 from fastapi import Depends
 
-from db.engine import engine
+from app.db.engine import engine
 
 
 SessionLocal = sessionmaker(

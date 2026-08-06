@@ -14,7 +14,7 @@ from sqlalchemy import (
     Enum
 )
 
-from db.base import BaseModel
+from app.db.base import BaseModel
 if TYPE_CHECKING:
     from models.users import User
 
@@ -40,6 +40,9 @@ class Project(BaseModel):
     owner_id: Mapped[int] = mapped_column(
         ForeignKey("users.id"),
         index=True
+    )
+    description: Mapped[str] = mapped_column(
+        String(500)
     )
     status: Mapped[ProjectStatus] = mapped_column(
         Enum(ProjectStatus, values_callable=lambda x:[e.value for e in x]),
@@ -97,7 +100,10 @@ class Tag(BaseModel):
     name: Mapped[str] = mapped_column(
         String(100)
     )
-    tasks: Mapped[list["Task"]] = relationship(back_populates="tags")
+    tasks: Mapped[list["Task"]] = relationship(
+        back_populates="tags",
+        secondary=task_tags
+    )
 
 
 

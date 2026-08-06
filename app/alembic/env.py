@@ -20,11 +20,11 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 
 
-from db.base import Base
+from app.db.base import Base
 
-from models.users import User
-from models.projects import (
+from app.models import (
     Project,
+    User,
     Task,
     Tag,
     Comment,
@@ -60,7 +60,7 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
-from db.engine import engine
+from app.db.engine import engine
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 
