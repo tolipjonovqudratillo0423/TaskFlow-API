@@ -1,2 +1,2 @@
-from app.models.projects import Project, Task, Tag, Comment, ProjectStatus
-from app.models.users import User
+from app.models.projects import *
+from app.models.users import *

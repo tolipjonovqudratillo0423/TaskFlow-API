@@ -1,4 +1,5 @@
 from pydantic import BaseModel, field_validator
+from typing import Optional
 
 from app.models import ProjectStatus
 
@@ -37,5 +38,20 @@ class ProjectRead(BaseModel):
 
     class Config:
         from_attributes =True
+    
+
+
+class ProjectUpdate(BaseModel):
+    
+    name: Optional[str] = None
+    description: Optional[str] = None
+    status: Optional[ProjectStatus] = None
+    
+    @field_validator("name")
+    @classmethod
+    def name_must_not_be_empty(cls, value: str) -> str:
+        if value is not None and not value.strip():
+            raise ValueError("Name must not be empty!")
+        return value.strip()
     
     
