@@ -10,10 +10,10 @@ from app.validators import (
 )
 
 
-router = APIRouter(prefix="/projects", tags=["Projects"])
+project_router = APIRouter(prefix="/projects", tags=["Projects"])
 
 
-@router.post("/", response_model=ProjectRead, status_code=201)
+@project_router.post("/", response_model=ProjectRead, status_code=201)
 def create_project(project_in: ProjectCreate, session: SessionDep):
     
     project = Project(**project_in.model_dump())
@@ -24,14 +24,14 @@ def create_project(project_in: ProjectCreate, session: SessionDep):
     return project
 
 
-@router.get("/", response_model=list[ProjectRead], tags=["Projects"])
+@project_router.get("/", response_model=list[ProjectRead], tags=["Projects"])
 def get_all_projects(session:SessionDep):
     
     projects = session.execute(select(Project).where(Project.is_active == True)).scalars().all()
     return projects
     
 
-@router.get("/{project_id}", response_model=ProjectRead, tags=["Projects"])
+@project_router.get("/{project_id}", response_model=ProjectRead, tags=["Projects"])
 def get_project(project_id:int, session:SessionDep):
     
     project = session.execute(select(Project).where(Project.id == project_id)).scalar_one_or_none()
@@ -43,7 +43,7 @@ def get_project(project_id:int, session:SessionDep):
     return project
 
 
-@router.put("/{project_id}", response_model=ProjectRead, tags=["Projects"])
+@project_router.put("/{project_id}", response_model=ProjectRead, tags=["Projects"])
 def update_project(project_id:int, updated_project: ProjectUpdate, session:SessionDep):
     
     project = session.execute(select(Project).where(Project.id == project_id)).scalar_one_or_none()
@@ -61,7 +61,7 @@ def update_project(project_id:int, updated_project: ProjectUpdate, session:Sessi
     return project
 
 
-@router.delete("/{project_id}", tags=["Projects"])
+@project_router.delete("/{project_id}", tags=["Projects"])
 def delete_project(project_id: int, session: SessionDep):
     
     project = session.execute(select(Project).where(Project.id == project_id)).scalar_one_or_none()

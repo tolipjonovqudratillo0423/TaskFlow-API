@@ -1,6 +1,4 @@
-from pydantic import (
-    Field
-)
+from pydantic import Field
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -17,6 +15,9 @@ class AppSettings(BaseSettings):
     secret_key: str
     database_url: str
     debug: bool = False
+    
+    access_token_minutes: int = 30
+    refresh_token_minutes: int = 7200
     
 settings = AppSettings()
     
