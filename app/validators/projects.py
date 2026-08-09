@@ -10,7 +10,6 @@ class ProjectCreate(BaseModel):
     name: str 
     status: ProjectStatus
     description: str
-    owner_id: int
     
     @field_validator("name")
     @classmethod
