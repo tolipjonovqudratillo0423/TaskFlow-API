@@ -52,3 +52,24 @@ class ProjectRepository:
         self.session.refresh(project)
         return project
 
+
+    def update(self, project: Project, project_data: dict)-> Project:
+        
+        for attr, value in project_data.items():
+            setattr(project, attr, value)
+        
+        self.session.commit()
+        self.session.refresh(project)
+        return project
+
+    
+    def delete(self, project: Project)-> Project:
+        project.is_active = False
+        self.session.commit()
+        self.session.refresh(project)
+        return project
+        
+        
+        
+        
+ 
