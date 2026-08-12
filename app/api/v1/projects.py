@@ -59,13 +59,13 @@ def get_project(project_id:int, session:SessionDep, current_user: User = Depends
 
 
 @project_router.put("/{project_id}", response_model=ProjectRead, tags=["Projects"])
-def update_project(project_id:int, project_in: ProjectUpdate, session:SessionDep, current_user: User = Depends(get_current_user)):
+def update_project(project_id:int, updated_project: ProjectUpdate, session:SessionDep, current_user: User = Depends(get_current_user)):
     repo = ProjectRepository(session)
     service = ProjectService(repo)
     try:
         project = service.update(project_id=project_id,
                                  owner_id=current_user.id,
-                                 project_in=project_in.model_dump()
+                                 updated_project=updated_project.model_dump()
                                  )
         return project
     except ProjectNotFoundError:

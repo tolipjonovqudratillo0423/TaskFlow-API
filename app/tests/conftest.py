@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from app.main import app
 from app.db.base import BaseModel
 from app.db import get_db
-from app.models import User
+from app.models import User, Project
 from app.api import get_current_user
 
 SQLALCHEMY_DATABASE_URL = "postgresql://tqm:Alabas23@localhost/tqm_test"
@@ -41,7 +41,6 @@ def client(db_session):
     db_session.commit()
     db_session.refresh(test_user)
     
-    
     def over_ride_get_db():
         yield db_session
         
@@ -53,3 +52,22 @@ def client(db_session):
     yield TestClient(app)
     app.dependency_overrides.clear()
 
+
+@pytest.fixture()
+def existing_project(client, db_session):
+    
+    test_project = Project(
+            id = 1,
+            name = "Test Project!",
+            description = "Just test is going on!",
+            status = "active",
+            owner_id = 1
+        )
+    db_session.add(test_project)
+    db_session.commit()
+    db_session.refresh(test_project)
+    
+    return test_project
+
+
+        
