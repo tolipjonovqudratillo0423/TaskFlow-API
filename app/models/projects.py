@@ -52,6 +52,9 @@ class Project(BaseModel):
     owner: Mapped["User"] = relationship(
         back_populates="projects"
     )
+    tasks: Mapped[list["Task"]] = relationship(
+        back_populates="project"
+    )
 
 
 task_tags = Table(
@@ -81,6 +84,10 @@ class Task(BaseModel):
         index=True
     )
 
+    project: Mapped["Project"] = relationship(
+        back_populates="tasks"
+    )
+    
     tags: Mapped[list["Tag"]] = relationship(
         secondary=task_tags,
         back_populates="tasks"

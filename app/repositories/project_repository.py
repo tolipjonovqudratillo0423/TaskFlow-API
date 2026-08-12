@@ -1,9 +1,7 @@
 from sqlalchemy import select
 
 from app.models import (
-    User,Project,
-    Tag, Task,
-    Comment
+    Project
 )
 from app.db import SessionDep
 
