@@ -1,0 +1,3 @@
+| Project | Problem solved | Current state | What's missing for proof | Demo/repo link | Next action | Keep/pause/archive |
+
+|TaskFlow API| The project offers controlled working line both developers and project managers by dividing project into small managble tasks. | Development of CRUD APIs fully intregrated with repository and service layer including JWT auth. | Finishing and Deployment, also DEMO | https://github.com/tolipjonovqudratillo0423/TaskFlow-API|Keep| 
