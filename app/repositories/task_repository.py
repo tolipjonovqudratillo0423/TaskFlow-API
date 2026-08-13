@@ -68,6 +68,7 @@ class TaskRepository:
                 Task.assignee_id == assignee_id
             )
         ).scalars().all()
+        return tasks
         
     def create(self, task_data: dict)-> Task:
          
