@@ -70,4 +70,39 @@ def existing_project(client, db_session):
     return test_project
 
 
+@pytest.fixture()
+def existing_project_and_assignee(client, db_session):
+    
+    test_project = Project(
+            id = 1,
+            name = "Test Project!",
+            description = "Just test is going on!",
+            status = "active",
+            owner_id = 1
+        )
+    db_session.add(test_project)
+    db_session.commit()
+    db_session.refresh(test_project)
+    
+    test_assignee = User(
+        id=2,
+        username='test_assignee',
+        email="assignee@example.com",
+        password_hash="fake_hash",
+        phone_number="+998000000001",
+        first_name="Assignee",
+        last_name="Test"
+    )
+    db_session.add(test_assignee)
+    db_session.commit()
+    db_session.refresh(test_assignee)
+    
+    return {
+        "project": test_project,
+        "assignee": test_assignee
+    }
+
+    
+
+
         

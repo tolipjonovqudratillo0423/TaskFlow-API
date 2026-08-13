@@ -1,14 +1,16 @@
 from app.services import TaskAccessDeniedError, TaskNotFoundError
 from app.repositories import TaskRepository, ProjectRepository
-from app.models import Task
+from app.models import Task, TaskStatus
+from app.db import SessionDep
+
 
 
 
 class TaskService:
     
-    def __init__(self, repo: TaskRepository, project_repo: ProjectRepository = None):
+    def __init__(self, repo: TaskRepository, session: SessionDep):
         self.repo = repo
-        self.project_repo = project_repo
+        self.project_repo = ProjectRepository(session=session)
         
     def get_task_by_id(self, task_id: int)-> Task:
         
@@ -76,7 +78,7 @@ class TaskService:
             raise TaskAccessDeniedError(
                 "You are not owner of given project!"
             )
-            
+        task_data["status"] = TaskStatus.TODO  
         task = self.repo.create(task_data=task_data)
         return task
     
