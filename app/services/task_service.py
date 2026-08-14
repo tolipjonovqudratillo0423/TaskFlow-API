@@ -12,26 +12,26 @@ class TaskService:
         self.repo = repo
         self.project_repo = ProjectRepository(session=session)
         
-    def get_task_by_id(self, task_id: int)-> Task:
+        
+    def get_task_by_id(self, task_id: int, current_user_id)-> Task:
         
         task = self.repo.get_task_by_id(task_id=task_id)
         
         if not task:
             raise TaskNotFoundError("Task not found!")
         
-        return task
-        
+        if task.project.owner_id == current_user_id or task.assignee_id == current_user_id:
+            return task
+        raise TaskAccessDeniedError("Access denied")
+  
     
     def get_all_tasks_by_owner(self, owner_id: int)-> list[Task]:
         
         tasks = self.repo.get_all_tasks_by_owner(owner_id=owner_id)
         
-        if not tasks:
+        if tasks is None:
             raise TaskNotFoundError("Task not found")
-        
-        if tasks[0].project.owner_id != owner_id:
-            raise TaskAccessDeniedError("Access denied")
-                
+          
         return tasks
 
 
@@ -42,9 +42,6 @@ class TaskService:
         if not tasks:
             raise TaskNotFoundError("Task not found")
         
-        if tasks[0].project.owner_id != owner_id:
-            raise TaskAccessDeniedError("Access denied")
-        
         return tasks
     
 
@@ -54,10 +51,8 @@ class TaskService:
         if not tasks:
             raise TaskNotFoundError("Task not found")
         
-        if tasks[0].assignee_id != assignee_id:
-            raise TaskAccessDeniedError("Access denied")
-        
         return tasks
+    
     
     def get_all_tasks_by_assignee_and_project(self, assignee_id: int, project_id: int)-> list[Task]:
         
@@ -65,10 +60,7 @@ class TaskService:
         
         if not tasks:
              raise TaskNotFoundError("Task not found")
-         
-        if tasks[0].assignee_id != assignee_id:
-             raise TaskAccessDeniedError("Access denied")
-               
+              
         return tasks
     
     
@@ -83,29 +75,31 @@ class TaskService:
         return task
     
     
-    def update(self, task_id: int, task_data: dict)-> Task:
+    def update(self, task_id: int, updated_task: dict, current_user_id: int)-> Task:
         instance = self.repo.get_task_by_id(task_id=task_id)
         
         if not instance:
             raise TaskNotFoundError("Task not found")
         
-        if instance.project.owner_id != task_data["owner_id"]:
-            raise TaskAccessDeniedError("Access denied")
+        if instance.project.owner_id == current_user_id or instance.assignee_id == current_user_id:
+            task = self.repo.update(task=instance, updated_task=updated_task)
+            return task
         
-        task = self.repo.update(task=task, task_data=task_data)
-        return task
-    
-    
-    def delete(self, task_id: int, owner_id: int)-> Task:
+        raise TaskAccessDeniedError("Access denied")
+        
+        
+    def delete(self, task_id: int, current_user_id: int)-> Task:
         
         task = self.repo.get_task_by_id(task_id=task_id)
         if not task:
             raise TaskNotFoundError("Task not found")
         
-        if task.project.owner_id != owner_id:
-            raise TaskAccessDeniedError("Access denied")
         
-        task = self.repo.delete(task=task)
-        return task
+        if task.project.owner_id == current_user_id or task.assignee_id == current_user_id:
+            task = self.repo.delete(task=task)
+            return task
+        
+        raise TaskAccessDeniedError("Access denied")    
+    
     
 

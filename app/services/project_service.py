@@ -9,8 +9,10 @@ class ProjectService:
         self.repo = repo
         
     def get_all_projects_by_owner(self, owner_id: int) -> list[Project]:
-    
         projects = self.repo.get_all_projects_by_owner(owner_id=owner_id)
+        
+        if projects is None:
+            raise ProjectNotFoundError
         return projects
     
 

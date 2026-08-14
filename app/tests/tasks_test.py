@@ -7,3 +7,9 @@ def test_create_task(client, existing_project_and_assignee):
     
     assert responce.status_code == 200
     assert responce.json()["name"] == "Test Task!"
+    
+
+def test_get_task_by_id(client, existing_project_and_assignee):
+    responce = client.get("/tasks/")
+    
+    assert responce.status_code == 200
