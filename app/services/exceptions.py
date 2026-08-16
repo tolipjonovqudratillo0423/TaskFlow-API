@@ -11,3 +11,6 @@ class TaskNotFoundError(Exception):
 
 class TaskAccessDeniedError(Exception):
     pass
+
+class TaskIsEmpty(Exception):
+    pass

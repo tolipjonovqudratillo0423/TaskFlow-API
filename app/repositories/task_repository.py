@@ -80,10 +80,10 @@ class TaskRepository:
     
     
     def update(self, task: Task, updated_task: dict)-> Task:
-        
+              
         for attr, value in updated_task.items():
             setattr(task, attr, value)
-            
+    
         self.session.commit()
         self.session.refresh(task)
         return task

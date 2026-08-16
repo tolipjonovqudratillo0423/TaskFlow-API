@@ -1,14 +1,13 @@
-from app.services import TaskAccessDeniedError, TaskNotFoundError
+from app.services import TaskAccessDeniedError, TaskNotFoundError, TaskIsEmpty
 from app.repositories import TaskRepository, ProjectRepository
 from app.models import Task, TaskStatus
 from app.db import SessionDep
 
 
 
-
 class TaskService:
     
-    def __init__(self, repo: TaskRepository, session: SessionDep):
+    def __init__(self, repo: TaskRepository, session: SessionDep = None):
         self.repo = repo
         self.project_repo = ProjectRepository(session=session)
         
@@ -29,16 +28,18 @@ class TaskService:
         
         tasks = self.repo.get_all_tasks_by_owner(owner_id=owner_id)
         
-        if tasks is None:
-            raise TaskNotFoundError("Task not found")
-          
+        if not tasks: 
+            raise TaskIsEmpty("User have no tasks!")
         return tasks
 
 
     def get_all_tasks_by_owner_and_project(self, owner_id: int, project_id: int)-> list[Task]:
         
         tasks = self.repo.get_all_tasks_by_owner_and_project(owner_id=owner_id, project_id=project_id)
+        project = self.project_repo.get_project(project_id, owner_id)
         
+        if not project:
+            raise TaskAccessDeniedError("You don't have permission to this project!")
         if not tasks:
             raise TaskNotFoundError("Task not found")
         
@@ -57,10 +58,9 @@ class TaskService:
     def get_all_tasks_by_assignee_and_project(self, assignee_id: int, project_id: int)-> list[Task]:
         
         tasks = self.repo.get_all_tasks_by_assignee_and_project(assignee_id=assignee_id, project_id=project_id)
-        
         if not tasks:
-             raise TaskNotFoundError("Task not found")
-              
+            raise TaskIsEmpty("Task not found")        
+       
         return tasks
     
     

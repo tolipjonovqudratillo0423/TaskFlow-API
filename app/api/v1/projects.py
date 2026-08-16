@@ -26,8 +26,8 @@ def create_project(project_in: ProjectCreate, session: SessionDep, current_user:
         return project
     except ProjectNotFoundError:
         raise HTTPException(status_code=404, detail="Project not found")
-    except ProjectAccessDeniedError:
-        raise HTTPException(status_code=403, detail="Access denied")
+    except Exception:
+        raise HTTPException(status_code=406, detail="Wrong project data")
 
 
 @project_router.get("/", response_model=list[ProjectRead], tags=["Projects"])
