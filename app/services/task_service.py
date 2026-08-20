@@ -64,14 +64,14 @@ class TaskService:
         return tasks
     
     
-    def create(self, task_data: dict, owner_id: int)-> Task:
+    def create(self, task_data: dict, owner_id: int, tag_ids: list)-> Task:
         project = self.project_repo.get_project(project_id=task_data["project_id"], owner_id=owner_id)
         if not project: 
             raise TaskAccessDeniedError(
                 "You are not owner of given project!"
             )
         task_data["status"] = TaskStatus.TODO  
-        task = self.repo.create(task_data=task_data)
+        task = self.repo.create(task_data=task_data, tag_ids=tag_ids)
         return task
     
     

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, field_validator
 from typing import Optional
 
-from app.models import TaskStatus
+from app.models import TaskStatus, Task
 
 class TaskRead(BaseModel):
     
@@ -10,13 +10,13 @@ class TaskRead(BaseModel):
     project_id: int
     assignee_id: int
     status: TaskStatus
-    
 
 class TaskCreate(BaseModel):
     
     name: str
     project_id: int
     assignee_id: int
+    tag_ids: list[int]
 
 
 class TaskUpdate(BaseModel):

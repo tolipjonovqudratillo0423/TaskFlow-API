@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from app.models import Task, Project
+from app.models import Task, Project, Tag
 from app.db import SessionDep
 
 
@@ -70,9 +70,20 @@ class TaskRepository:
         ).scalars().all()
         return tasks
         
-    def create(self, task_data: dict)-> Task:
+    def create(self, task_data: dict, tag_ids: list)-> Task:
          
         task = Task(**task_data)
+        if tag_ids:
+            tags = self.session.execute(
+                select(Tag)
+                .where(Tag.id.in_(tag_ids))
+            ).scalars().all()
+            if len(tags) != len(set(tag_ids)):
+                found_ids = {t.id for t in tags}
+                missing = set(tag_ids) - found_ids
+                raise ValueError(f"Tags is not found: {missing}")
+            task.tags = tags
+        
         self.session.add(task)
         self.session.commit()
         self.session.refresh(task)

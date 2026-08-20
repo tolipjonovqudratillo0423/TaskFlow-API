@@ -18,13 +18,16 @@ task_router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
 
 
-@task_router.post("/", response_model=TaskRead, tags=["Tasks"], status_code=201)
+@task_router.post("/", tags=["Tasks"], status_code=201)
 def create(task_in: TaskCreate, session: SessionDep, current_user: User = Depends(get_current_user)):
     repo = TaskRepository(session)
     service = TaskService(repo, session)
+    task_data = task_in.model_dump()
+    tag_ids = task_data.pop("tag_ids", None)
     
     try: 
-        task = service.create(task_data=task_in.model_dump(), owner_id=current_user.id)
+        task = service.create(task_data=task_data, owner_id=current_user.id, tag_ids=tag_ids)
+        tags = task.tags
         return task
     except TaskAccessDeniedError:
         raise HTTPException(status_code=406, detail="Wrong task data is given")     

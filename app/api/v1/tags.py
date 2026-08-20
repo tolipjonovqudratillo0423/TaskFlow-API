@@ -20,6 +20,8 @@ def get_all_tags(session: SessionDep, current_user: User = Depends(get_current_u
     return tags
 
 
+# @tag_router.get("/")
+
 @tag_router.post("/", response_model=TagRead, tags=["Tags"], status_code=201)
 def create_tag(tag: TagCreate, session: SessionDep, current_user: User = Depends(get_current_user)):
     repo = TagRepository(session)
